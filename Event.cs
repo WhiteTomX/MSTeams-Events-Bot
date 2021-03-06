@@ -25,6 +25,7 @@ namespace TeamsEventBot
                 // Because validationToken is a string, OkObjectResult
                 // will return a text/plain response body, which is
                 // required for validation
+                log.LogInformation("Subscription creation was validated.");
                 return new OkObjectResult(validationToken);
             }
 
@@ -40,11 +41,11 @@ namespace TeamsEventBot
             // objects
             var notifications = JsonSerializer.Deserialize<ChangeNotificationList>(requestBody, jsonOptions);
 
-            _ = ProcessNotificationList(notifications, log);
+            ProcessNotificationList(notifications, log);
 
             return new AcceptedResult();
         }
-        private static async Task ProcessNotificationList(ChangeNotificationList notificationList, ILogger log)
+        private static void ProcessNotificationList(ChangeNotificationList notificationList, ILogger log)
         {
             string clientState = System.Environment.GetEnvironmentVariable("ClientState", EnvironmentVariableTarget.Process);
             foreach (var notification in notificationList.Value)
